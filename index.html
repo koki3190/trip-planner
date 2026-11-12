@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Planner | 旅のしおり・予算管理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="modern.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <header class="header"><h1>✈ Trip Planner</h1><nav><a href="#home" id="home-link">ホーム</a><a href="#trips" id="trips-link">旅行プラン</a></nav></header>
+  <main>
+    <div id="home-view">
+      <section class="hero" id="home"><h2>旅行の計画を、もっと楽しく。</h2><p>旅のしおりと予算を、ひとつに。</p><button type="button" id="open-form">＋ 新しい旅行を計画する</button></section>
+      <section class="dashboard" aria-label="旅行ダッシュボード">
+        <div class="dashboard-heading"><div><span class="dashboard-eyebrow">OVERVIEW</span><h2>旅行ダッシュボード</h2><p>あなたの旅行計画をひと目でチェック</p></div></div>
+        <div class="dashboard-grid">
+          <article class="dashboard-stat"><span class="dashboard-icon" aria-hidden="true">🧳</span><span class="dashboard-label">登録した旅行</span><strong id="dashboard-count">0<span class="dashboard-unit"> 件</span></strong><small>保存されている旅行プラン</small></article>
+          <article class="dashboard-stat"><span class="dashboard-icon" aria-hidden="true">📅</span><span class="dashboard-label">次の旅行</span><strong id="dashboard-next">未登録</strong><small id="dashboard-next-date">旅行を登録してみましょう</small></article>
+          <article class="dashboard-stat"><span class="dashboard-icon" aria-hidden="true">💳</span><span class="dashboard-label">予定総予算</span><strong id="dashboard-budget">0円</strong><small>全旅行の予算合計（全員分）</small></article>
+        </div>
+      </section>
+      <section class="trips" id="trips"><h2>あなたの旅行プラン</h2><p class="muted">行きたい場所と旅の思い出を、ここから。</p><div id="trip-list" class="trip-list"></div></section>
+    </div>
+    <section id="detail-view" class="detail-view" hidden>
+      <button type="button" id="back-home" class="text-button">← 旅行一覧へ戻る</button>
+      <div class="detail-heading"><h2 id="detail-title"></h2><p id="detail-subtitle" class="muted"></p></div>
+      <div class="tabs" role="group" aria-label="表示切り替え"><button type="button" id="tab-itinerary" class="tab active">旅のしおり</button><button type="button" id="tab-budget" class="tab">予算管理</button></div>
+      <section id="itinerary-panel"><div id="day-tabs" class="day-tabs"></div><div class="section-row"><h3 id="selected-day-title">旅程</h3><button type="button" id="add-event">＋ 旅程を追加する</button></div><div id="event-list" class="event-list"></div></section>
+      <section id="budget-panel" hidden><div class="budget-overview"><div class="stat stat-total"><span>旅行全体の総予算</span><strong id="budget-total"></strong><small id="budget-total-formula"></small></div><div class="stat"><span>旅行人数</span><strong id="budget-people"></strong></div><div class="stat"><span>1人あたりの旅行予算</span><strong id="budget-per-person"></strong></div><div class="stat"><span>支出予定</span><strong id="budget-spent"></strong></div><div class="stat"><span>使える残り予算（全員分）</span><strong id="budget-remaining"></strong></div><div class="stat"><span>1人あたりの支出予定</span><strong id="budget-spent-per-person"></strong></div><div class="stat"><span>1人あたりの残り予算</span><strong id="budget-remaining-per-person"></strong></div></div><div class="progress"><div id="budget-progress"></div></div><p id="budget-percent" class="muted"></p><h3>費用の内訳</h3><div id="budget-breakdown"></div><p class="muted">旅のしおりで費用を入力すると、自動で集計されます。</p></section>
+    </section>
+  </main>
+  <footer>© 2026 Trip Planner</footer>
+  <dialog id="trip-dialog" class="modal"><form id="trip-form"><div class="modal-heading"><h2 id="trip-form-title">新しい旅行を作成</h2><button type="button" class="close-button" id="close-trip" aria-label="閉じる">×</button></div><label for="trip-name">旅行名</label><input id="trip-name" required maxlength="60" placeholder="例：大分温泉旅行"><label for="trip-destination">旅行先</label><input id="trip-destination" required maxlength="100" placeholder="例：大分県 別府市"><div class="two-cols"><div><label for="start-date">出発日</label><input id="start-date" type="date" required></div><div><label for="end-date">帰宅日</label><input id="end-date" type="date" required></div></div><label for="trip-people">旅行人数</label><input id="trip-people" type="number" min="1" max="100" step="1" value="1" required><label for="trip-budget">1人あたりの旅行予算（円）</label><input id="trip-budget" type="number" min="0" max="999999999" step="1" required placeholder="例：20000"><div class="budget-preview"><span>旅行全体の総予算（自動計算）</span><strong id="trip-budget-preview">0円</strong><small id="trip-budget-formula">予算 × 人数</small></div><p class="form-error" id="trip-error" role="alert"></p><button type="submit" class="full-button" id="save-trip">旅行プランを作成する</button></form></dialog>
+  <dialog id="event-dialog" class="modal"><form id="event-form"><div class="modal-heading"><h2 id="event-form-title">旅程を追加</h2><button type="button" class="close-button" id="close-event" aria-label="閉じる">×</button></div><label for="event-date">日付</label><select id="event-date" required></select><label for="event-time">時間</label><input id="event-time" type="time" required><label for="event-title">旅程のタイトル</label><input id="event-title" required maxlength="80" placeholder="例：とり天ランチ"><label for="event-place">場所（任意）</label><input id="event-place" maxlength="100" placeholder="例：別府駅周辺"><label for="event-category">カテゴリー</label><select id="event-category"><option value="交通費">🚃 交通費</option><option value="食費">🍽️ 食費</option><option value="宿泊費">🏨 宿泊費</option><option value="観光費">🎡 観光費</option><option value="買い物">🛍️ 買い物</option><option value="その他">📌 その他</option></select><label for="event-cost-scope">費用の入力方法</label><select id="event-cost-scope"><option value="total">全員分の合計金額</option><option value="person">1人あたりの金額</option></select><label for="event-cost">費用（円）</label><input id="event-cost" type="number" min="0" max="999999999" step="1" required value="0"><label for="event-note">メモ（任意）</label><textarea id="event-note" rows="3" maxlength="500" placeholder="予約情報・持ち物など"></textarea><p class="form-error" id="event-error" role="alert"></p><button type="submit" class="full-button" id="save-event">旅程を保存する</button></form></dialog>
+  <script src="script.js"></script>
+</body>
+</html>
